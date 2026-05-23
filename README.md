@@ -76,10 +76,10 @@ Dense(4)            →  Softmax output — 4 classes
 ## Features
 
 - **Grayscale preprocessing** — X-rays loaded as single channel images `(224, 224, 1)`
-- - **Custom train/test split** — dataset split 80/20 with stratification across all 4 classes
+- **Custom train/test split** — dataset split 80/20 with stratification across all 4 classes
 - **Data augmentation** — rotation, shifts, zoom and horizontal flip and brightness variation applied to training data only
 - **Separate generators** — augmentation applied to training data, rescaling only to test data prevents data leakage
-- - **Class weight balancing** — computed class weights address severe imbalance between Normal (10,192) and Viral Pneumonia (1,345)
+- **Class weight balancing** — computed class weights address severe imbalance between Normal (10,192) and Viral Pneumonia (1,345)
 - **Batch Normalization** — stabilises training across all three convolutional blocks
 - **Early stopping** — monitors `val_loss` with `patience=5` and `restore_best_weights=True`
 - **Full evaluation pipeline** — classification report, confusion matrix and training curve visualisations
