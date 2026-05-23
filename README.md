@@ -6,38 +6,43 @@
 ![Matplotlib](https://img.shields.io/badge/Matplotlib-11557c)
 ![Seaborn](https://img.shields.io/badge/Seaborn-blue)
 
-A convolutional neural network built with TensorFlow/Keras that classifies chest X-ray images into three diagnostic categories — **Covid-19, Viral Pneumonia, and Normal** — achieving over 86% accuracy on unseen test data.
+A convolutional neural network built with TensorFlow/Keras that classifies chest X-ray images into four diagnostic categories — **Covid-19, Viral Pneumonia, Lung Opacity and Normal** — trained on over 15,000 chest X-ray images from the COVID-19 Radiography Database.
 
 ---
 
 ## Project Overview
 
-This project trains a deep learning CNN on chest X-ray images to assist in the diagnostic classification of lung conditions. The model is trained on the Covid-19 Image Dataset sourced from Kaggle and applies real-world medical imaging techniques including grayscale preprocessing, data augmentation, and early stopping with best weight restoration. Model performance is evaluated using a full classification report and a confusion matrix heatmap.
+This project trains a deep learning CNN on chest X-ray images to assist in the diagnostic classification of lung conditions. The model is trained on the COVID-19 Radiography Database sourced from Kaggle — a medically supervised dataset of over 15,000 chest X-rays across four classes. The pipeline applies real-world medical imaging techniques including grayscale preprocessing, aggressive data augmentation, class weight balancing for imbalanced classes, and early stopping with best weight restoration. Model performance is evaluated using a full classification report and a confusion matrix heatmap.
 
 ---
 
 ## Dataset
 
-**Source:** [Covid-19 Image Dataset — Kaggle (pranavraikokte)](https://www.kaggle.com/datasets/pranavraikokte/covid19-image-dataset)
+**Source:** [COVID-19 Radiography Database — Kaggle (tawsifurrahman)](https://www.kaggle.com/datasets/tawsifurrahman/covid19-radiography-database)
 
-| Class | Description |
-|---|---|
-| Covid | Chest X-rays of Covid-19 positive patients |
-| Viral Pneumonia | Chest X-rays of Viral Pneumonia patients |
-| Normal | Chest X-rays of healthy patients |
+| Class | Images | Description |
+|---|---|---|
+| Normal | 10,192 | Chest X-rays of healthy patients |
+| COVID | 3,616 | Chest X-rays of Covid-19 positive patients |
+| Lung Opacity | 6,012 | Chest X-rays showing non-COVID lung opacity |
+| Viral Pneumonia | 1,345 | Chest X-rays of Viral Pneumonia patients |
 
 The dataset is pre-split into `train/` and `test/` directories, each containing the three class subfolders.
 
 ```
-Covid19-dataset/
-    train/
-        Covid/
-        Normal/
-        Viral Pneumonia/
-    test/
-        Covid/
-        Normal/
-        Viral Pneumonia/
+Covid19_Radiography_Dataset/
+    COVID/
+        images/
+        mask/
+    Normal/
+        images/
+        mask/
+    Lung_Opacity/
+        images/
+        mask/
+    Viral Pneumonia/
+        images/
+        mask/
 ```
 
 ---
@@ -45,17 +50,21 @@ Covid19-dataset/
 ## Model Architecture
 
 ```
-Input Layer         →  (128, 128, 1) — grayscale X-ray images
+Input Layer         →  (224, 224, 1) — grayscale X-ray images
 Conv2D(32, 3x3)     →  ReLU + same padding
+Batch Normalization
 MaxPooling2D        →  (2, 2)
 Conv2D(64, 3x3)     →  ReLU + same padding
+BatchNormalization
 MaxPooling2D        →  (2, 2)
 Conv2D(128, 3x3)    →  ReLU + same padding
+BatchNormalization
 MaxPooling2D        →  (2, 2)
 Flatten
-Dropout(0.3)        →  Regularization
+Dropout(0.5)        →  Regularization
 Dense(64)           →  ReLU
-Dense(3)            →  Softmax output — 3 classes
+Dropout(0.3)        →  Regularization
+Dense(4)            →  Softmax output — 4 classes
 ```
 
 **Loss function:** Sparse Categorical Crossentropy  
@@ -66,11 +75,13 @@ Dense(3)            →  Softmax output — 3 classes
 
 ## Features
 
-- **Grayscale preprocessing** — X-rays loaded as single channel images `(128, 128, 1)`
-- **Data augmentation** — rotation, shifts, zoom and horizontal flip applied to training data only
-- **Separate generators** — augmentation applied to training data, rescaling only to test data
+- **Grayscale preprocessing** — X-rays loaded as single channel images `(224, 224, 1)`
+- - **Custom train/test split** — dataset split 80/20 with stratification across all 4 classes
+- **Data augmentation** — rotation, shifts, zoom and horizontal flip and brightness variation applied to training data only
+- **Separate generators** — augmentation applied to training data, rescaling only to test data prevents data leakage
+- - **Class weight balancing** — computed class weights address severe imbalance between Normal (10,192) and Viral Pneumonia (1,345)
+- **Batch Normalization** — stabilises training across all three convolutional blocks
 - **Early stopping** — monitors `val_loss` with `patience=5` and `restore_best_weights=True`
-- **Dropout regularization** — reduces overfitting on a relatively small medical dataset
 - **Full evaluation pipeline** — classification report, confusion matrix and training curve visualisations
 
 ---
@@ -106,7 +117,7 @@ For a medical classification model, accuracy alone is insufficient. In Covid-19 
 - **Precision** — of all predicted Covid cases, how many were actually Covid
 - **Recall** — of all actual Covid cases, how many did the model correctly identify
 
-A high Recall is clinically critical — missing a Covid case (false negative) carries far greater risk than a false alarm (false positive).
+A high Recall is clinically critical — missing a Covid case (false negative) carries far greater risk than a false alarm (false positive). This is reflected in the class weight balancing strategy, which penalises the model more heavily for misclassifying minority classes.
 
 ---
 
@@ -118,6 +129,12 @@ A high Recall is clinically critical — missing a Covid case (false negative) c
 pip install tensorflow scikit-learn matplotlib seaborn
 ```
 
+### Dataset Setup
+1. Download the [COVID-19 Radiography Database](https://www.kaggle.com/datasets/tawsifurrahman/covid19-radiography-database) from Kaggle
+2. Extract to your project directory as `COVID-19_Radiography_Dataset/`
+3. Uncomment the `create_train_test_split()` call in `script.py` and run once to create the train/test split
+4. Comment it back out before rerunning
+
 ### Run the classifier
 
 ```bash
@@ -125,6 +142,7 @@ python script.py
 ```
 
 ### Expected output
+- Train/test split created in `Covid19-dataset/`
 - Training progress printed per epoch
 - Classification report printed to console
 - `static/images/my_plots.png` — training curves
@@ -136,14 +154,15 @@ python script.py
 
 - Convolutional Neural Network architecture for image classification
 - Medical image preprocessing with grayscale normalisation
-- Data augmentation for small medical datasets
-- Separate train/test data generators to prevent data leakage
+- - Custom dataset splitting for datasets without pre-built train/test structure
+- Data augmentation to improve generalisation on medical imaging data
+- - Class weight balancing for imbalanced multi-class datasets
 - Early stopping with best weight restoration
 - Model evaluation with classification report and confusion matrix
 - Training diagnostics visualisation with Matplotlib
 
 ---
 
-## 📄 License
+## License
 
 This project is open source and available under the [MIT License](LICENSE).
