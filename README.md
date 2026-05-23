@@ -1,10 +1,10 @@
 # Covid-19 Chest X-Ray Classifier — CNN Image Classification
-![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange?logo=tensorflow)
-![Keras](https://img.shields.io/badge/Keras-red?logo=keras)
-![scikit-learn](https://img.shields.io/badge/scikit--learn-grey?logo=scikit-learn)
-![Matplotlib](https://img.shields.io/badge/Matplotlib-11557c)
-![Seaborn](https://img.shields.io/badge/Seaborn-blue)
+[![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.16+-FF6F00?style=flat&logo=tensorflow&logoColor=white)](https://www.tensorflow.org/)
+[![Keras](https://img.shields.io/badge/Keras-3.14.0-D00000?style=flat&logo=keras&logoColor=white)](https://keras.io/)
+[![Scikit-learn](https://img.shields.io/badge/Scikit--learn-1.4+-F7931E?style=flat&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![Matplotlib](https://img.shields.io/badge/Matplotlib-3.4.0-11557c?style=flat&logoColor=white)](https://matplotlib.org/)
+[![Seaborn](https://img.shields.io/badge/Seaborn-0.13+-4C72B0?style=flat&logoColor=white)](https://seaborn.pydata.org/)
 
 A convolutional neural network built with TensorFlow/Keras that classifies chest X-ray images into four diagnostic categories — **Covid-19, Viral Pneumonia, Lung Opacity and Normal** — trained on over 15,000 chest X-ray images from the COVID-19 Radiography Database.
 
