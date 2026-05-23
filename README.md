@@ -130,6 +130,7 @@ pip install tensorflow scikit-learn matplotlib seaborn
 ```
 
 ### Dataset Setup
+The dataset is not included in this repository due to its size.
 1. Download the [COVID-19 Radiography Database](https://www.kaggle.com/datasets/tawsifurrahman/covid19-radiography-database) from Kaggle
 2. Extract to your project directory as `COVID-19_Radiography_Dataset/`
 3. Uncomment the `create_train_test_split()` call in `script.py` and run once to create the train/test split
