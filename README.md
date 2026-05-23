@@ -154,9 +154,9 @@ python script.py
 
 - Convolutional Neural Network architecture for image classification
 - Medical image preprocessing with grayscale normalisation
-- - Custom dataset splitting for datasets without pre-built train/test structure
+- Custom dataset splitting for datasets without pre-built train/test structure
 - Data augmentation to improve generalisation on medical imaging data
-- - Class weight balancing for imbalanced multi-class datasets
+- Class weight balancing for imbalanced multi-class datasets
 - Early stopping with best weight restoration
 - Model evaluation with classification report and confusion matrix
 - Training diagnostics visualisation with Matplotlib
